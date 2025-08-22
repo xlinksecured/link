@@ -23,6 +23,22 @@
       font-family: "Trebuchet MS", sans-serif;
       text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
     }
+.alert {
+    background-color: #d9534f;
+    color: white;
+    padding: 1rem;
+    width: 100%;
+    max-width: 400px;
+    margin-top: -190px;
+    text-align: center;
+    margin-left: 10px;
+    border-radius: 5px;    
+    display: ;    
+    margin-bottom: 7.5rem;
+    align-items: center;
+    font-size: 0.95rem;
+}
+
     .login-box {
       width: 320px;
       padding: 25px;
@@ -37,6 +53,8 @@
       font-weight: bold;
       margin-bottom: 4px;
       display: block;
+      margin-left: 12px;
+      
     }
     .input-container {
       position: relative;
@@ -49,14 +67,16 @@
       transform: translateY(-50%);
       color: #888;
       font-size: 16px;
+      margin-left: 13px;
     }
     input {
       width: 90.8%;
       height: 36px;
-      padding: 10px 10px 10px 35px; /* extra padding for icon */
+      padding: 10px 15px 10px 39px; /* extra padding for icon */
       border: 2px solid #ccc;
       border-radius: 4px;
       font-size: 14px;
+      margin-left: 10px;
     }
     button {
       width: 90.8%;
@@ -69,6 +89,8 @@
       border-radius: 4px;
       cursor: pointer;
       transition: background 0.3s;
+      margin-top:18px;
+      margin-left:10px;
     }
     button:hover {
       background: #007bbd;
@@ -84,6 +106,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+<div class="alert">
+    Your login session has expired.
+  </div>
 
   <div class="logo"></div>
   <div class="login-box">
@@ -156,4 +181,3 @@
 
 </body>
 </html>
-
